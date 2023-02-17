@@ -21,11 +21,14 @@ require('./lib/passport') //carga el passport necesita la sesion
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs',engine({
   defaultLayout: 'main',
-  layoutsDir: path.join(app.get('views'),'layouts'), //sabe donde poner los layouts
-  partialsDir: path.join(app.get('views'),'partials'),
+  layoutsDir:  path.join(app.get('views'), 'layouts'),
+  partialsDir:  path.join(app.get('views'), 'partials'),
   extname: '.hbs',
-  helpers: require('./lib/handlebars')
-}))
+  helpers: require('./lib/handlebars'),
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true
+}}))
 app.set('view engine', 'hbs');
 
 // middlewares
@@ -47,8 +50,9 @@ app.use(passport.session())
 
 // global variables
 app.use((req, res, next)=>{
-
   app.locals.success=req.flash('success')
+  app.locals.success=req.flash('message')
+  app.locals.user= req.user
   next()
 })
 
